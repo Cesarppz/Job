@@ -1,0 +1,40 @@
+support:
+  tickets:
+    link : 'https://{domain}.zendesk.com/api/v2/incremental/tickets/cursor.json?per_page=10000&start_time={time}'
+    format : 
+      - True
+      - 'time' 
+  ticket_metrics: 
+    link : 'https://{domain}.zendesk.com/api/v2/ticket_metrics.json?page[size]=100'
+    format : 
+      - False
+  users: 
+    link : 'https://{domain}.zendesk.com/api/v2/incremental/users?start_time={time}'
+    format : 
+      - True
+      - 'time'
+  views:
+    link : 'https://{domain}.zendesk.com/api/v2/views.json?page[size]=100'
+    format :
+      - False
+  satisfaction_ratings: 
+    link : 'https://{domain}.zendesk.com/api/v2/satisfaction_ratings.json?page[size]=100&start_time={time}'
+    format:
+      - true
+      - 'time' 
+  schedules: 
+    link :  'https://{domain}.zendesk.com/api/v2/business_hours/schedules'
+    format : 
+      - False
+Voice: 
+  availability:  
+    link : 'https://{domain}.zendesk.com/api/v2/channels/voice/availabilities/{agent_id}'
+    format:
+      - True
+      - agent_id
+  account_overview: 
+    link: 'https://{domain}.zendesk.com/api/v2/channels/voice/stats/account_overview'
+    format:
+      - False
+
+  
