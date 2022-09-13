@@ -18,7 +18,7 @@ link_image_pattern = re.compile(r'^(http).*/.+\.((jpg|jpeg|png|JPG|JPEG|svg|gif|
 link_image_pattern2 = re.compile(r'^(http).*/.+')
 
 
-def download(image,second_try_image = None, nombre_del_lugar = None, idx=0, len_links=0,title_for_image=None):
+def download(image,second_try_image = None, nombre_del_lugar = None, idx=0, len_links=0, title_for_image=None, main_dir_name =None):
     
     if image or second_try_image != None:
             if image:
@@ -38,16 +38,37 @@ def download(image,second_try_image = None, nombre_del_lugar = None, idx=0, len_
 
             #Mover la imagen a la carpeta de imagenes
             nombre_dir = f'data_{nombre_del_lugar}_{dia}_{mes}'
-            try:
-                os.makedirs(f'./{nombre_dir}')
-            except FileExistsError:
-                pass
-            except Exception as ex:
-                logger.error(ex)
+            
 
-            subprocess.run(['mv',image_name,'{}/{}'.format(nombre_dir,image_name)],cwd='.')
+            if main_dir_name != None:
 
-            return image_name
+                try:
+                    os.makedirs(f'./{main_dir_name}')
+                except FileExistsError:
+                    pass
+                try:
+                    os.makedirs(f'./{main_dir_name}/{nombre_dir}')
+                except FileExistsError:
+                    pass
+                
+                subprocess.run(['mv',image_name,'{}/{}/{}'.format(main_dir_name,nombre_dir,image_name)],cwd='.')
+
+                path_image = '{}/{}'.format(main_dir_name,nombre_dir)
+                return image_name, path_image
+           
+            else:
+
+                try:
+                    os.makedirs(f'./{nombre_dir}')
+                except FileExistsError:
+                    pass
+                except Exception as ex:
+                    logger.error(ex)
+
+                subprocess.run(['mv',image_name,'{}/{}'.format(nombre_dir,image_name)],cwd='.')
+
+                return image_name
+            
     else :
         print('-'*20)
         logger.warning(f'La imagen {idx} no se descrago')
@@ -98,11 +119,13 @@ def download_opener(image,second_try_image = None, nombre_del_lugar = None, idx=
         return image_name
 
 
-def download_image_with_requests(image,second_try_image = None, nombre_del_lugar = None, idx=0, len_links=0,title_for_image=None):
+def download_image_with_requests(image,second_try_image = None, nombre_del_lugar = None, idx=0, len_links=0,title_for_image=None,main_dir_name=None):
     
     if image or second_try_image != None:
             if image:
                 image_format = re.match(link_image_pattern,image).group(2)
+                if image_format == 'webp':
+                    image_format = 'jpg'
                 image_name = f'{nombre_del_lugar}_{idx}de{len_links}_{dia}_{mes}.{image_format}'
                 if title_for_image != None:
                     image_name = f'{title_for_image}.{image_format}'
@@ -121,16 +144,34 @@ def download_image_with_requests(image,second_try_image = None, nombre_del_lugar
 
             #Mover la imagen a la carpeta de imagenes
             nombre_dir = f'data_{nombre_del_lugar}_{dia}_{mes}'
-            try:
-                os.makedirs(f'./{nombre_dir}')
-            except FileExistsError:
-                pass
-            except Exception as ex:
-                logger.error(ex)
+            if main_dir_name != None:
 
-            subprocess.run(['mv',image_name,'{}/{}'.format(nombre_dir,image_name)],cwd='.')
+                try:
+                    os.makedirs(f'./{main_dir_name}')
+                except FileExistsError:
+                    pass
+                try:
+                    os.makedirs(f'./{main_dir_name}/{nombre_dir}')
+                except FileExistsError:
+                    pass
+                
+                subprocess.run(['mv',image_name,'{}/{}/{}'.format(main_dir_name,nombre_dir,image_name)],cwd='.')
 
-            return image_name
+                path_image = '{}/{}'.format(main_dir_name,nombre_dir)
+                return image_name, path_image
+           
+            else:
+
+                try:
+                    os.makedirs(f'./{nombre_dir}')
+                except FileExistsError:
+                    pass
+                except Exception as ex:
+                    logger.error(ex)
+
+                subprocess.run(['mv',image_name,'{}/{}'.format(nombre_dir,image_name)],cwd='.')
+
+                return image_name
     else :
         print('-'*20)
         logger.warning(f'La imagen {idx} no se descrago')

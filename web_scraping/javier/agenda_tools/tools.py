@@ -2,13 +2,18 @@ from selenium import webdriver
 from agenda_tools import get_schedule, get_category, download_images
 import time 
 
-def get_links_by_scralling(url,xpath_expresion, attribute='href',executable_path='../driver/geckodriver'):
+def get_links_by_scralling(url,xpath_expresion, attribute='href',executable_path='../driver/geckodriver', driver=False):
     #Instanciar el navegador
-    options = webdriver.FirefoxOptions()
-    options.add_argument("--headless")
-    #chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
-    driver = webdriver.Firefox(executable_path='../driver/geckodriver', options=options)
-    driver.get(url)
+    if driver:
+        driver.get(url)
+        close = False
+    else:
+        options = webdriver.FirefoxOptions()
+        options.add_argument("--headless")
+        #chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+        driver = webdriver.Firefox(executable_path=executable_path, options=options)
+        driver.get(url)
+        close = True
     #Get links scralling
     box = []
     previous_heigth = driver.execute_script('return document.body.scrollHeight')
@@ -21,10 +26,13 @@ def get_links_by_scralling(url,xpath_expresion, attribute='href',executable_path
             break
         previous_heigth = new_heigth
     if attribute != 'text':
-        box = [i.get_attribute(attribute) for i in box[1:]]
+        box = [i.get_attribute(attribute) for i in box]
     else:
         box = [i.text for i in box[1:]]
-    driver.close()
+    
+    if close: 
+        driver.close()
+    
     return box
 
 
@@ -80,7 +88,7 @@ def get_attribute_by_selenium(url,xpath_expresion,text=True,list_number=0,attr='
 
 
 def remove_blank_spaces(text):
-    return text.replace('\xa0',' ').replace('\n',' ').replace('\t',' ').replace('  ',' ').replace('\n',' ').strip()
+    return text.replace('\xa0',' ').replace('\n',' ').replace('\t',' ').replace('  ',' ').replace('\n',' ').replace('\r','').strip()
 
 
 # def get_links_by_scralling(self,url,xpath_expresion, attribute='href'):

@@ -1,0 +1,3 @@
+name_tag  ; attr_class   ; attr_name 
+div;class;ficha_foto flex-image n item
+section;class;re-DetailMosaic re-DetailMosaic-grid5

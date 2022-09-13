@@ -1,32 +1,32 @@
 agenda:
   last_scrape:
-    bellas_artes_san_fernando: &id001 2022-03-02
+    bellas_artes_san_fernando: &id001 2022-09-01
     caixa_forum_madrid: *id001
-    casa_de_mexico: *id001
-    casa_de_mexico_expo: *id001
-    casa_de_mexico_teatro: *id001
+    casa_de_mexico: &id002 2022-09-02
+    casa_de_mexico_expo: *id002
+    casa_de_mexico_teatro: *id002
     centro_centro: *id001
-    cine_golem: *id001
-    cine_paz: *id001
-    cine_renoir_plaza: *id001
-    cines_verdi: *id001
-    cines_yelmo: *id001
-    cinesa: *id001
-    cinescallao: *id001
-    cineteca_madrid: *id001
-    circo_price: *id001
+    cine_golem: &id003 2022-09-02
+    cine_paz: *id002
+    cine_renoir_plaza: *id002
+    cines_verdi: *id002
+    cines_yelmo: *id003
+    cinesa: *id003
+    cinescallao: *id002
+    cineteca_madrid: *id003
+    circo_price: *id003
     circulo_bellas_artes: *id001
-    clamores: *id001
-    conde_duque_alberto: *id001
-    conde_duque_santa: *id001
-    corte_ingles: *id001
+    clamores: *id002
+    conde_duque_alberto: *id002
+    conde_duque_santa: *id002
+    corte_ingles: *id002
     fundacion_juan_march: *id001
     fundacion_maphre: *id001
     fundacion_telefonica: *id001
-    honky_tonk: *id001
-    infanta_isabel: *id001
-    lazaro_galdiano: *id001
-    luchana_kids: *id001
+    honky_tonk: *id003
+    infanta_isabel: *id003
+    lazaro_galdiano: *id003
+    luchana_kids: *id002
     maria_cristina: *id001
     museo_arqueologico: *id001
     museo_arte_contemporaneo: *id001
@@ -35,33 +35,33 @@ agenda:
     museo_reina_sofia: *id001
     museo_sorolla: *id001
     museo_thyssen_bornemisza: *id001
-    off_latina: *id001
-    pequeno_teatro_gran_via: *id001
-    sala_arte_canal_isabel_ii: 2022-02-25
-    sala_azarte: *id001
-    sala_berlanga: *id001
+    off_latina: *id003
+    pequeno_teatro_gran_via: *id003
+    sala_arte_canal_isabel_ii: *id003
+    sala_azarte: *id003
+    sala_berlanga: *id002
     sala_equis: *id001
-    sala_mirador: *id001
-    soho_club: *id001
-    teatro_abadia: *id001
-    teatro_alfil: *id001
-    teatro_apolo: *id001
-    teatro_arlequin_gv: *id001
-    teatro_calderon: *id001
-    teatro_capitol: *id001
-    teatro_del_barrio: *id001
-    teatro_edp_gran_via: *id001
-    teatro_espanol_naves: *id001
-    teatro_fernan_gomez: *id001
-    teatro_figaro: *id001
-    teatro_lara: *id001
-    teatro_lara2: *id001
-    teatro_luchana: *id001
-    teatro_quique: *id001
-    teatro_real: *id001
-    teatro_reina_victoria: *id001
-    teatros_canal: *id001
-    wizink_center: *id001
+    sala_mirador: *id003
+    soho_club: *id003
+    teatro_abadia: *id003
+    teatro_alfil: *id003
+    teatro_apolo: *id003
+    teatro_arlequin_gv: *id003
+    teatro_calderon: *id003
+    teatro_capitol: *id003
+    teatro_del_barrio: *id003
+    teatro_edp_gran_via: *id003
+    teatro_espanol_naves: *id003
+    teatro_fernan_gomez: *id003
+    teatro_figaro: *id003
+    teatro_lara: *id003
+    teatro_lara2: *id003
+    teatro_luchana: *id002
+    teatro_quique: *id002
+    teatro_real: *id003
+    teatro_reina_victoria: *id003
+    teatros_canal: *id002
+    wizink_center: *id003
   sitios:
   - cine_paz
   - cines_verdi

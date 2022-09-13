@@ -96,7 +96,7 @@ def main(args, file_test = None, test=False):
             logger.info('Sitio {}/{}'.format(idx+1,len(lista_sitios)))
 
             if args.system == 'windows':  #Segun el sistema operativo donde este, se cambia la carpeta 
-                path = '/home/cesarppz/Documents/jobs/agenda/{}'.format(site)
+                path = '/home/cesarppz/Documents/jobs/web_scraping/javier/agenda/{}'.format(site)
                 path_final_dir = '//mnt/c/Users/cesar/Desktop/fiver_javier/'
             else:
                 path = '/home/cesar/Documents/job/web_scraping/javier/agenda/{}'.format(site)
@@ -124,6 +124,6 @@ def main(args, file_test = None, test=False):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--test','-t',type=str,help='Test es para hacer el test de uno o más recintos',nargs='?')
-    parser.add_argument('--system','-s',default='linux',choices=['linux','windows'],type=str,help='En que sistema esta corriendo el programa',nargs='?')
+    parser.add_argument('--system','-s',default='windows',choices=['linux','windows'],type=str,help='En que sistema esta corriendo el programa',nargs='?')
     args = parser.parse_args()
     main(args)

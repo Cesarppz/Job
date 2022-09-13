@@ -25,7 +25,7 @@ class MainSpider(scrapy.Spider):
                         }
 
     def parse(self, response):
-        links = set(response.xpath('//li[@id="menu-item-423"]//ul[@class="sub-menu nav-column nav-dropdown-default"]//a/@href').getall())
+        links = set( response.xpath('//li[@id="menu-item-423"]//ul[@class="sub-menu nav-dropdown nav-dropdown-default"]//a/@href').getall())
         for idx, link in enumerate(links):
             logger.info(f'Category {idx+1}/{len(links)}')
             yield response.follow(link, callback=self.parse_main)
@@ -42,7 +42,7 @@ class MainSpider(scrapy.Spider):
             logger.info(f'Producto {idx_m+1}/{len(links_main)}')
             yield response.follow(link, callback=self.new_parse, cb_kwargs={'link':link})
 
-        next_page = response.xpath('a[@class="next page-number"]/@href').get()
+        next_page = response.xpath('//a[@class="next page-number"]/@href').get()
         if next_page:
             yield response.follow(next_page, callback=self.parse_main)
 
