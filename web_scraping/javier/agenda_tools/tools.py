@@ -88,7 +88,7 @@ def get_attribute_by_selenium(url,xpath_expresion,text=True,list_number=0,attr='
 
 
 def remove_blank_spaces(text):
-    return text.replace('\xa0',' ').replace('\n',' ').replace('\t',' ').replace('  ',' ').replace('\n',' ').replace('\r','').strip()
+    return text.replace('\xa0',' ').replace('\n',' ').replace('\t',' ').replace('  ',' ').replace('   ',' ').replace('\n',' ').replace('\r','').strip()
 
 
 # def get_links_by_scralling(self,url,xpath_expresion, attribute='href'):

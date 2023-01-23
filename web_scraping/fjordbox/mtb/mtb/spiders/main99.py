@@ -41,10 +41,10 @@ class MainSpider(scrapy.Spider):
                         'FEED_EXPORT_ENCODING':'utf-8'}
 
     def start_requests(self):
-        url = 'https://99spokes.com/en-GB/bikes?region=gb'
+        url = 'https://99spokes.com/en/bikes'
         driver.get(url)
         time.sleep(5)
-        links = [i.get_attribute('href') for i in driver.find_elements_by_xpath('//div[@class="sc-89f09698-0 sc-89f09698-1 kQJYPE jEFUxZ"]//a')]
+        links = [i.get_attribute('href') for i in driver.find_elements('xpath','//div[@class="sc-89f09698-0 sc-89f09698-1 bvZPvD hpuEdD"]//a[@class="sc-d44587c2-0 sc-d44587c2-1 KUBfh iwfJdr"]')]
         print('Links: ',links)
         for link in links:
             yield scrapy.Request(url=link, callback=self.parse )
@@ -54,7 +54,7 @@ class MainSpider(scrapy.Spider):
     def parse(self, response):
         driver.get(response.request.url)
         time.sleep(3)
-        links  = [i.get_attribute('href') for i in driver.find_elements_by_xpath('//div[@class="sc-89f09698-0 sc-89f09698-1 kQJYPE eLPLjR"]//a')]
+        links  = [i.get_attribute('href') for i in driver.find_elements('xpath','//a[@class="sc-d44587c2-0 sc-d44587c2-1 KUBfh gYREv"]')]
 
         for link in links:
 
@@ -67,7 +67,7 @@ class MainSpider(scrapy.Spider):
 
     def extract_info(driver, xpath, attr='text'):
         try:
-            element = driver.find_element_by_xpath(xpath)
+            element = driver.find_element('xpath',xpath)   
             if attr == 'text':
                 element = element.text
             else:
@@ -79,144 +79,148 @@ class MainSpider(scrapy.Spider):
         link = kwargs['link']
         #brand
         driver.get(link)
+        time.sleep(1)
         wait = WebDriverWait(driver, 60)
         image = wait.until(EC.visibility_of_element_located((By.XPATH, '//picture/img'))).get_attribute('src')
-        brand = driver.find_element_by_xpath('//ul[@class="sc-89f09698-0 sc-89f09698-1 kQJYPE pQbYR"]/li[position()=2]').text
-        Model =  ' '.join(driver.find_element_by_xpath('//h1[@id="overview"]').text.split(' ')[1:])
-        year  =  driver.find_element_by_xpath('//h1[@id="overview"]').text.split(' ')[0]    
-        # image = driver.find_element_by_xpath('//picture/img').get_attribute('src')
+        brand = driver.find_element('xpath','//ul[@class="sc-89f09698-0 sc-89f09698-1 bvZPvD gvrfOq"]/li[position()=2]').text
+        Model =  ' '.join(driver.find_element('xpath','//h1[@id="overview"]').text.split(' ')[1:])
+        year  =  driver.find_element('xpath','//h1[@id="overview"]').text.split(' ')[0]    
+        # image = driver.find_element('xpath','//picture/img').get_attribute('src')
         #image =  response.xpath('//img[@data-toggle="lightbox"]/@src').get()
         image_title = '_'.join(Model.split(' ')).lower()+ str(random.randint(0,1000)).replace('/','').replace('\\','').replace('!','')
         print('Image: ', image)
         image_name  = download_images.download_image_with_requests(image, title_for_image=image_title, nombre_del_lugar='data'+self.name)
         try:
-            price = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 kQJYPE bicETb"]//tr[contains(.,"RRP")]/td').text
+            price = driver.find_element('xpath','//tr[contains(.,"RRP")]/td').text
         except:
             price = None
-        category =  driver.find_element_by_xpath('//ul[@class="sc-89f09698-0 sc-89f09698-1 kQJYPE pQbYR"]/li[position()=4]').text
-        wheels  = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 kQJYPE bicETb"]//tr[contains(.,"Wheels")]/td').text
-        frame = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 kQJYPE bicETb"]//tr[contains(.,"Frame")]/td').text
+        category =  driver.find_element('xpath','//ul[@class="sc-89f09698-0 sc-89f09698-1 bvZPvD gvrfOq"]/li[position()=4]').text
         try:
-            suspension_fork =  driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 kQJYPE bicETb"]//tr[contains(.,"Fork")]/td').text
+            wheels  = driver.find_element('xpath','//tr[contains(.,"Wheels")]/td').text
+        except:
+            category = None
+        frame = driver.find_element('xpath','//tr[contains(.,"Frame")]/td').text
+        try:
+            suspension_fork =  driver.find_element('xpath','//tr[contains(.,"Fork")]/td').text
         except:
             suspension_fork = None
         try:
-            rear_derailleur = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//tr[contains(.,"Rear Derailleur")]/td').text
+            rear_derailleur = driver.find_element('xpath','//tr[contains(.,"Rear )Derailleur"]/td').text
         except:
             rear_derailleur = None
         try:
-            shift_levers = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//tr[contains(.,"Shifters")]/td').text
+            shift_levers = driver.find_element('xpath','//tr[contains(.,"Shifters")]/td').text
         except:
             shift_levers = None
         try:
-            cassette = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//tr[contains(.,"Cassette")]/td').text
+            cassette = driver.find_element('xpath','//tr[contains(.,"Cassette")]/td').text
         except:
             cassette = None
         try:
-            crank = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//tr[contains(.,"Crank")]/td').text
+            crank = driver.find_element('xpath','//tr[contains(.,"Crank")]/td').text
         except:
             crank = None
         try:
-            bottom_bracket =  driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Bottom Bracket")]/../td').text
+            bottom_bracket =  driver.find_element('xpath','//th[text()="Bottom Bracket"]/../td').text
         except:
             bottom_bracket = None
         try:
-            chain = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Chain")]/../td').text
+            chain = driver.find_element('xpath','//th[text()="Chain"]/../td').text
         except:
             chain = None
         try:
-            pedals = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Pedals")]/../td').text
+            pedals = driver.find_element('xpath','//th[text()="Pedals"]/../td').text
         except:
             pedals = None
         try:
-            rims = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Rims")]/../td').text
+            rims = driver.find_element('xpath','//th[text()="Rims"]/../td').text
         except:
             rims = None 
         try:
-            tires = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Tires")]/../td').text
+            tires = driver.find_element('xpath','//th[text()="Tires"]/../td').text
         except:
             tires = None
         try:
-            brakes = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Brakes")]/../td').text
+            brakes = driver.find_element('xpath','//th[text()="Brakes"]/../td').text
         except:
             brakes = None
         try:
-            stem = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Stem")]/../td').text
+            stem = driver.find_element('xpath','//th[text()="Stem"]/../td').text
         except:
             stem = None
         try:
-            handlebar = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Handlebar")]/../td').text
+            handlebar = driver.find_element('xpath','//th[text()="Handlebar"]/../td').text
         except:
             handlebar = None
         try:
-            grips = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Grips")]/../td').text
+            grips = driver.find_element('xpath','//th[text()="Grips"]/../td').text
         except:
             grips = None 
         try:
-            headset = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Headset")]/../td').text
+            headset = driver.find_element('xpath','//th[text()="Headset"]/../td').text
         except:
             headset = None 
         try:
-            saddle = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Saddle")]/../td').text
+            saddle = driver.find_element('xpath','//th[text()="Saddle"]/../td').text
         except:
             saddle = None
         try:
-            seatpost = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Seatpost")]/../td').text
+            seatpost = driver.find_element('xpath','//th[text()="Seatpost"]/../td').text
         except:
             seatpost = None
         try:
-            motor =  driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 kQJYPE bicETb"]//tr[contains(.,"Motor")]/td').text
+            motor =  driver.find_element('xpath','//tr[contains(.,"Motor"))]/td').text
             e_bike = True
         except:
             motor = None
             e_bike = False
         try:
-            battery =  driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 kQJYPE bicETb"]//tr[contains(.,"Battery")]/td').text
+            battery =  driver.find_element('xpath','//tr[contains(.,"Battery"))]/td').text
         except:
             battery = None
         try:
-            charger = ' '.join(response.xpath('//li[@class="list-group-item border-left-0 border-right-0 rounded-0"][contains(.,"Charger")]//small[@class="text-muted"]//text()').getall())
+            charger = ' '.join(response.xpath('//li[@class="list-group-item border-left-0 border-right-0 rounded-0[text()="Charger"]//small[@class="text-muted"]//text()').getall())
         except:
             charger = None
         try:
-            remote = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//tr[contains(.,"Remote")]/td').text
+            remote = driver.find_element('xpath','//tr[contains(.,"Remote")]/td').text
         except:
             remote = None
         try:
-            front_derailleur = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Front Derailleur")]/../td').text
+            front_derailleur = driver.find_element('xpath','//th[text()="Front Derailleur"]/../td').text
         except:
             front_derailleur = None
         try:
-            chain_guide = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Chain Guide")]/../td').text
+            chain_guide = driver.find_element('xpath','//th[text()="Chain Guide"]/../td').text
         except:
             chain_guide = None
         try:
-            brake_levers = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Brake Levers")]/../td').text
+            brake_levers = driver.find_element('xpath','//th[text()="Brake Levers"]/../td').text
         except:
             brake_levers = None
         try:
-            rear_shock = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Rear Shock")]/../td').text
+            rear_shock = driver.find_element('xpath','//th[text()="Rear Shock"]/../td').text
         except:
             rear_shock = None
         try:
-            disk_rotors = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Disk Rotors")]/../td').text
+            disk_rotors = driver.find_element('xpath','//th[text()="Disk Rotors"]/../td').text
         except:
             disk_rotors = None
         try:
-            front_hub = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Front Hub")]/../td').text
+            front_hub = driver.find_element('xpath','//th[text()="Front Hub"]/../td').text
 
         except :
             front_hub = None
         try:
-            rear_hub = driver.find_element_by_xpath('//table[@class="sc-89f09698-0 sc-89f09698-1 sc-e9487005-0 kQJYPE dGqmyt hAprOR"]//th[contains(.,"Rear Hub")]/../td').text
+            rear_hub = driver.find_element('xpath','//th[text()="Rear Hub"]/../td').text
         except: 
             rear_hub = None
         try:
-            spokes = driver.find_element_by_xpath('//table//th[contains(.,"Spokes")]/../td').text
+            spokes = driver.find_element('xpath','//table//th[text()="Spokes"]/../td').text
         except:
             spokes = None 
         try:
-            chain_tensioner =  driver.find_element_by_xpath('//table//th[contains(.,"Chain Tensioner")]/../td').text
+            chain_tensioner =  driver.find_element('xpath','//th[text()="Chain Tensioner"]/../td').text
         except:
             chain_tensioner = None
 
